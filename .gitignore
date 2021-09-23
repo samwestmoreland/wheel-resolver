@@ -1,3 +1,5 @@
 .plzconfig
 plz-out/
 pleasew
+*.swp
+*.swo

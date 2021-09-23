@@ -12,17 +12,20 @@ package(
 python_binary(
     name = "resolve",
     main = "resolve.py",
-    deps = [":library"],
-)
-
-python_library(
-    name = "library",
-    srcs = ["mylib.py"],
-#    visibility = ["//src/..."],
     deps = [
-        "//third_party/python:distlib",
-        "//third_party/python:packaging",
-        #"//third_party/python:wheel-inspect",
-        "//third_party/python:wheel-filename",
+        "//src/lib:mylib",
+        "//third_party/python:argparse",
     ],
 )
+
+# python_library(
+#     name = "library",
+#     srcs = ["//src:mylib"],
+# #    visibility = ["//src/..."],
+#     deps = [
+#         "//third_party/python:distlib",
+#         "//third_party/python:packaging",
+#         #"//third_party/python:wheel-inspect",
+#         "//third_party/python:wheel-filename",
+#     ],
+# )

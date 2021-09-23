@@ -1,4 +1,7 @@
-package(default_visibility = ["PUBLIC"])
+package(
+    default_visibility = ["PUBLIC"],
+    python_wheel_repo = "https://get.please.build/third_party/python/py3",
+)
 
 pip_library(
     name = "distlib",
@@ -49,6 +52,6 @@ pip_library(
 )
 
 pip_library(
-    name = "argpars",
+    name = "argparse",
     version = "1.4.0",
 )

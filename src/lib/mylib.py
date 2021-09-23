@@ -18,7 +18,7 @@ def is_compatible_with(system, wheel):
             return True
 
 
-def is_compatible_with_this_system(wheel):
+def is_compatible(wheel):
     """
     Check whether the given python package is a wheel compatible with the
     current platform and python interpreter.
@@ -34,22 +34,41 @@ def is_compatible_with_this_system(wheel):
             return True
 
 
-def get_url(urls):
-    for url in urls:
-        basename = os.path.basename(url)
-        _, ext = os.path.splitext(basename)
-        if ext == '.whl':
-            # _, _, _, tagliatelles = parse_wheel_filename(basename)
-            # for tag in tagliatelles:
-            #     print('tag:', tag)
+def get_basename(url):
+    """
+    Return the url basename,
+    i.e. https://www.example.com/foo/bar.whl -> bar.whl
+    """
+    return os.path.basename(url)
 
-            if is_compatible_with_this_system(basename):
-                return url
+
+def is_wheel_file(url):
+    """ Return whether or not this is a .whl file """
+    basename = os.path.basename(url)
+    _, ext = os.path.splitext(basename)
+    return ext == '.whl'
+
+
+def get_url(urls):
+    """
+    From the list of urls we got from the wheel index, return the first
+    one that is compatible (either with our system or a provided one)
+    """
+    for url in urls:
+        if is_wheel_file(url) and is_compatible(get_basename(url)):
+            return url
 
     return 1
 
 
 def get_download_urls(package, version=None):
+    """
+    Return all downloadable urls from wheel index that match
+    the provided package name and version requirement
+    """
+    if package is None:
+        return None
+
     mylocator = locators.PyPIJSONLocator('https://pypi.org/pypi')
     # Populate requirement
     requirement = None

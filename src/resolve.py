@@ -3,7 +3,7 @@ Main
 """
 
 import sys
-import src.mylib as ml
+import src.lib.mylib as ml
 import third_party.python.argparse as argparse
 
 # my_platform_tag = util.get_platform()
@@ -32,22 +32,13 @@ def main():
 
     args = parser.parse_args()
 
-    urls = None
-
-    if len(sys.argv) == 2:
-        # No version specified so pull latest
-        urls = ml.get_download_urls(sys.argv[1])
-    elif len(sys.argv) == 3:
-        urls = ml.get_download_urls(sys.argv[1], sys.argv[2])
-    else:
-        sys.exit(1)
-
-    result = None
+    # Fetch all available wheel urls from index
+    urls = ml.get_download_urls(args.package, args.version)
     if urls == 1:
         print("couldn't find any matching urls in the index")
         sys.exit(1)
-    else:
-        result = ml.get_url(urls)
+
+    result = ml.get_url(urls)
 
     if result is None:
         print("error")
