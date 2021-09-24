@@ -25,27 +25,26 @@ def main():
             '--arch',
             type=str,
             help='specify architecture')
-    parser.add_argument(
-            '--os',
-            type=str,
-            help='specify operating system')
 
     args = parser.parse_args()
+    print('package:', args.package)
+    print('version:', args.version)
+    print('arch:', args.arch)
 
     # Fetch all available wheel urls from index
     urls = ml.get_download_urls(args.package, args.version)
     if urls == 1:
-        print("couldn't find any matching urls in the index")
+        print("Couldn't find any matching urls in the index")
         sys.exit(1)
 
-    result = ml.get_url(urls)
+    result = ml.get_url(urls, args.arch)
 
     if result is None:
         print("error")
         sys.exit(1)
     elif result == 1:
-        print("none of the urls found are \
-               compatible with the specified system")
+        print("Found", len(urls), "urls but none are "
+              "compatible with the specified architecture")
         sys.exit(1)
     else:
         print(result)

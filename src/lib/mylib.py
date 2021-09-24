@@ -6,32 +6,24 @@ import os
 from third_party.python.packaging.utils import parse_wheel_filename
 import third_party.python.packaging.tags as tags
 import third_party.python.distlib.locators as locators
-# from wheel_inspect import inspect_wheel
 
 
-def is_compatible_with(system, wheel):
-    _, _. _, tag = parse_wheel_filename(wheel)
-    count = 0
-    for systag in tags.generic_tags(None, None, system):
-        count += 1
-        if systag in tag:
-            return True
-
-
-def is_compatible(wheel):
+def is_compatible(wheel, arch):
     """
     Check whether the given python package is a wheel compatible with the
     current platform and python interpreter.
     Compatibility is based on https://www.python.org/dev/peps/pep-0425/
     """
+    # Get the tag from the wheel we're checking
     _, _, _, tag = parse_wheel_filename(wheel)
-    count = 0
-    for systag in tags.sys_tags():
-        count += 1
-        if systag in tag:
-            # print('match with sys_tag:', systag)
-            # print('tag', count, 'of', num_sys_tags)
+
+    # taglist is a list (generator) of tags that are compatible
+    taglist = tags.generic_tags(platforms=arch) if arch else tags.sys_tags()
+
+    for tagliatelle in taglist:
+        if tagliatelle in tag:
             return True
+    return False
 
 
 def get_basename(url):
@@ -49,15 +41,25 @@ def is_wheel_file(url):
     return ext == '.whl'
 
 
-def get_url(urls):
+def get_url(urls, arch):
     """
     From the list of urls we got from the wheel index, return the first
     one that is compatible (either with our system or a provided one)
     """
+    if arch:
+        count = 0
+        for _ in tags.generic_tags(platforms=[arch]):
+            count += 1
+        if count == 0:
+            print("Didn't generate any tags for arch =", arch)
+            return 1
+
     for url in urls:
-        if is_wheel_file(url) and is_compatible(get_basename(url)):
+        if is_wheel_file(url) and is_compatible(get_basename(url), arch):
             return url
 
+    print("No compatible urls for", count, "system tags")
+    print("The tags were:", [i for i in tags.generic_tags(platforms=[arch])])
     return 1
 
 

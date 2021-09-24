@@ -1,17 +1,20 @@
 import unittest
-import logging
 import src.lib.mylib as ml
-import third_party.python.packaging.tags as tags
 
 
 class CrossCompileTest(unittest.TestCase):
+    """ Test cross compilation """
 
-    def test_try_platform(self):
-        interpreter = "py3"
-        gentags = tags.generic_tags(interpreter=interpreter,
-                                    abis=None,
-                                    platforms=["macosx"])
-        # self.assertEqual(sum(1 for _ in gentags), 0)
-        self.assertEqual(list(gentags), [])
-        # for tag in gentags:
-        #     self.assertEqual(tag, None)
+    def test_darwin_tag(self):
+        urls = ml.get_download_urls('tensorflow')
+        result = ml.get_url(urls, "darwin_amd64")
+        self.assertNotEqual(result, 1)
+        self.assertIn('.whl', ml.get_basename(result))
+        self.assertIn('tensorflow', ml.get_basename(result))
+
+    def test_freebsd_tag(self):
+        urls = ml.get_download_urls('tensorflow')
+        result = ml.get_url(urls, "freebsd_amd64")
+        self.assertNotEqual(result, 1)
+        self.assertIn('.whl', ml.get_basename(result))
+        self.assertIn('tensorflow', ml.get_basename(result))
