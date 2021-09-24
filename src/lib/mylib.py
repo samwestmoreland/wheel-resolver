@@ -59,7 +59,7 @@ def get_url(urls, arch):
             return url
 
     print("No compatible urls for", count, "system tags")
-    print("The tags were:", [i for i in tags.generic_tags(platforms=[arch])])
+    print("The tags were:", list(tags.generic_tags(platforms=[arch])))
     return 1
 
 

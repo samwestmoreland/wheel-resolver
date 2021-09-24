@@ -11,7 +11,13 @@ python_test(
 )
 
 gentest(
-    name = "random_test",
+    name = "six_with_version_test",
     test_cmd = "plz run //src:resolve -- --package six --version 1.16.0",
+    no_test_output = True,
+)
+
+gentest(
+    name = "tensorflow_no_version_test",
+    test_cmd = "plz run //src:resolve -- --package tensorflow",
     no_test_output = True,
 )
