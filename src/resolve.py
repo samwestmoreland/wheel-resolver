@@ -1,5 +1,5 @@
 """
-Main
+Tool to resolve a wheel file from an index given a package name
 """
 
 import sys

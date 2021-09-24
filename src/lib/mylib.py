@@ -59,7 +59,14 @@ def get_url(urls, arch):
             return url
 
     print("No compatible urls for", count, "system tags")
-    print("The tags were:", list(tags.generic_tags(platforms=[arch])))
+    print("The tags given to me for this arch were:")
+    print('\n'.join(map(str, list(tags.generic_tags(platforms=[arch])))))
+    print('The tags I was looking for were:')
+    for url in urls:
+        if is_wheel_file(url):
+            _, _, _, tag = parse_wheel_filename(get_basename(url))
+            print(tag)
+
     return 1
 
 
