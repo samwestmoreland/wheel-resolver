@@ -13,7 +13,7 @@ python_binary(
     name = "resolve",
     main = "resolve.py",
     deps = [
-        "//src/lib:mylib",
+        "//src/tags:tags",
         "//third_party/python:argparse",
     ],
 )

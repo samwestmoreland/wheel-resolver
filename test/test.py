@@ -1,5 +1,5 @@
 import unittest
-import src.lib.mylib as ml
+import src.tags.tags as ml
 
 
 class LibTest(unittest.TestCase):

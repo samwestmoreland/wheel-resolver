@@ -1,6 +1,6 @@
 python_library(
-    name = "mylib",
-    srcs = ["mylib.py"],
+    name = "tags",
+    srcs = ["tags.py"],
     visibility = [
         "//src/...",
         "//test/...",

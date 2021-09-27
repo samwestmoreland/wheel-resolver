@@ -3,7 +3,7 @@ Tool to resolve a wheel file from an index given a package name
 """
 
 import sys
-import src.lib.mylib as ml
+import src.tags.tags as ml
 import third_party.python.argparse as argparse
 
 # my_platform_tag = util.get_platform()
@@ -29,9 +29,10 @@ def main():
             help='specify architecture')
 
     args = parser.parse_args()
-    print('package:', args.package)
-    print('version:', args.version)
-    print('arch:', args.arch)
+
+    # print('package:', args.package)
+    # print('version:', args.version)
+    # print('arch:', args.arch)
 
     # Fetch all available wheel urls from index
     urls = ml.get_download_urls(args.package, args.version)

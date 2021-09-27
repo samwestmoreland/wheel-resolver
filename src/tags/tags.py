@@ -20,6 +20,9 @@ def is_compatible(wheel, taglist):
     # taglist is a list of tags that we've got either from the user
     # or we've auto-generated them for this system
 
+    if taglist is None:
+        taglist = tags.sys_tags()
+
     for system_tag in taglist:
         if system_tag in tag:
             return True
@@ -60,7 +63,7 @@ def get_url(urls, archs):
     one that is compatible (either with our system or a provided one)
     """
     taglist = None
-    if archs is not None:
+    if len(archs) != 0:
         # Make a list of tags
         taglist = generate_tags_from_all_archs(archs)
         # Just check that we've got some tags
