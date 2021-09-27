@@ -21,3 +21,9 @@ gentest(
     test_cmd = "plz run //src:resolve -- --package tensorflow",
     no_test_output = True,
 )
+
+gentest(
+    name = "list_of_archs_test",
+    test_cmd = "plz run //src:resolve -- --package six --arch none any",
+    no_test_output = True,
+)

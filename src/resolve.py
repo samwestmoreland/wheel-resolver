@@ -23,7 +23,9 @@ def main():
             help='the version of the package to be resolved')
     parser.add_argument(
             '--arch',
+            nargs="*",
             type=str,
+            default=[],
             help='specify architecture')
 
     args = parser.parse_args()
@@ -51,18 +53,3 @@ def main():
 
 
 main()
-
-
-###############################
-# num_sys_tags = 0
-# for tag in tags.sys_tags():
-#     print(tag)
-#     num_sys_tags += 1
-
-# print()
-#
-# print('macos tags')
-# for tag in tags.generic_tags(None, None, tags.mac_platforms((11, 2))):
-#     print(tag)
-#
-# print()

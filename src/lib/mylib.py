@@ -8,7 +8,7 @@ import third_party.python.packaging.tags as tags
 import third_party.python.distlib.locators as locators
 
 
-def is_compatible(wheel, arch):
+def is_compatible(wheel, taglist):
     """
     Check whether the given python package is a wheel compatible with the
     current platform and python interpreter.
@@ -17,11 +17,11 @@ def is_compatible(wheel, arch):
     # Get the tag from the wheel we're checking
     _, _, _, tag = parse_wheel_filename(wheel)
 
-    # taglist is a list (generator) of tags that are compatible
-    taglist = tags.generic_tags(platforms=arch) if arch else tags.sys_tags()
+    # taglist is a list of tags that we've got either from the user
+    # or we've auto-generated them for this system
 
-    for tagliatelle in taglist:
-        if tagliatelle in tag:
+    for system_tag in taglist:
+        if system_tag in tag:
             return True
     return False
 
@@ -41,26 +41,43 @@ def is_wheel_file(url):
     return ext == '.whl'
 
 
-def get_url(urls, arch):
+def generate_tags_from_all_archs(archs):
+    result = []
+    for arch in archs:
+        result += list(tags.generic_tags(interpreter=None,
+                                         abis=None,
+                                         platforms=[arch]))
+        result += list(tags.compatible_tags(python_version=None,
+                                            interpreter=None,
+                                            platforms=[arch]))
+
+    return result
+
+
+def get_url(urls, archs):
     """
     From the list of urls we got from the wheel index, return the first
     one that is compatible (either with our system or a provided one)
     """
-    if arch:
-        count = 0
-        for _ in tags.generic_tags(platforms=[arch]):
-            count += 1
-        if count == 0:
-            print("Didn't generate any tags for arch =", arch)
+    taglist = None
+    if archs is not None:
+        # Make a list of tags
+        taglist = generate_tags_from_all_archs(archs)
+        # Just check that we've got some tags
+        if len(taglist) == 0:
+            print("Didn't generate any tags for arch list:", archs)
             return 1
 
+    # Loop through all the urls fetched from pypi and check them against
+    # out system tags
     for url in urls:
-        if is_wheel_file(url) and is_compatible(get_basename(url), arch):
+        if is_wheel_file(url) and is_compatible(get_basename(url), taglist):
             return url
 
-    print("No compatible urls for", count, "system tags")
+    print("No compatible urls for", len(taglist), "system tags")
     print("The tags given to me for this arch were:")
-    print('\n'.join(map(str, list(tags.generic_tags(platforms=[arch])))))
+    for tag in taglist:
+        print(tag)
     print('The tags I was looking for were:')
     for url in urls:
         if is_wheel_file(url):

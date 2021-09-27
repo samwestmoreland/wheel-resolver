@@ -16,3 +16,9 @@ class LibTest(unittest.TestCase):
         urls = ml.get_download_urls('tensorflow')
         for url in urls:
             self.assertIn('.whl', url)
+
+    def test_make_list_of_tags_from_archs(self):
+        archs = ['macosx_10_10_x86_64', 'any']
+        result = ml.generate_tags_from_all_archs(archs)
+
+        self.assertNotEqual(result, [])
