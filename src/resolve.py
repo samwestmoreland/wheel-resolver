@@ -3,7 +3,7 @@ Tool to resolve a wheel file from an index given a package name
 """
 
 import sys
-import src.tags.tags as ml
+import src.tags.tags as tg
 import third_party.python.argparse as argparse
 
 # my_platform_tag = util.get_platform()
@@ -35,12 +35,12 @@ def main():
     # print('arch:', args.arch)
 
     # Fetch all available wheel urls from index
-    urls = ml.get_download_urls(args.package, args.version)
+    urls = tg.get_download_urls(args.package, args.version)
     if urls == 1:
         print("Couldn't find any matching urls in the index")
         sys.exit(1)
 
-    result = ml.get_url(urls, args.arch)
+    result = tg.get_url(urls, args.arch)
 
     if result is None:
         print("error")
